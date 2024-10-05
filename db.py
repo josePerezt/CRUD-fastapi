@@ -24,5 +24,5 @@ async def get_db()->AsyncGenerator[AsyncSession,None]:
     try:
       yield session
     finally:
-      session.close()
+      await session.close()
     
