@@ -40,18 +40,3 @@ class CRUD:
     user_db = user_response.scalars().first()
 
     return  user_db
-  
-
-  async def get_user(self,user:str,db:AsyncSession):
-
-    query = select(User).filter_by(user)
-    
-    user_response = await db.execute(query)
-    
-    if  user_response is None:
-      return None
-
-    user_db = user_response.scalars().first()
-
-    return  user_db
-  
