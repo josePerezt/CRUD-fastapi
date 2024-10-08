@@ -1,9 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
 from models import User
 from schemas import UserCreate
+from fastapi.security import OAuth2PasswordRequestForm
 
 class CRUD:
   async def get_all_user(self,db:AsyncSession):
@@ -27,3 +27,31 @@ class CRUD:
     await db.commit()
     await db.refresh(db_user)
     return db_user
+  
+  async def get_user_by(self,form_data:OAuth2PasswordRequestForm,db:AsyncSession):
+
+    query = select(User).filter_by(name = form_data.username,password = form_data.password)
+    
+    user_response = await db.execute(query)
+    
+    if  user_response is None:
+      return None
+
+    user_db = user_response.scalars().first()
+
+    return  user_db
+  
+
+  async def get_user(self,user:str,db:AsyncSession):
+
+    query = select(User).filter_by(user)
+    
+    user_response = await db.execute(query)
+    
+    if  user_response is None:
+      return None
+
+    user_db = user_response.scalars().first()
+
+    return  user_db
+  
